@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_dynamodb_table" "cars_db" {
-  name         = "Auto VerwaltungDB"
+  name         = "Auto-VerwaltungDB"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Kennzeichen"
 
@@ -55,7 +55,7 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 resource "aws_iam_policy" "lambda_db_access" {
-  name = "AutoLambda DynamoDBAccess"
+  name = "AutoLambda-DynamoDBAccess"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
