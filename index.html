@@ -8,18 +8,18 @@
 <body>
     <div class="card">
         <h1>🚗 Fahrzeug-Status</h1>
-        <div id="data">Lade Daten...</div>
+        <div id="data">Warte auf Daten...</div>
         <button onclick="fetchData()">Aktualisieren</button>
     </div>
     <script>
         const url = "https://cbydgitsycukdj5gc2kciemale0rjrxu.lambda-url.us-east-1.on.aws/";
         async function fetchData() {
-            const display = document.getElementById('data');
+            const d = document.getElementById('data');
             try {
-                const response = await fetch(url);
-                const result = await response.json();
-                display.innerHTML = `<strong>Auto:</strong> ${result.auto}<br><strong>Besitzer:</strong> ${result.besitzer}<br><small style="color:green;">${result.status}</small>`;
-            } catch (e) { display.innerHTML = "Fehler!"; }
+                const r = await fetch(url);
+                const res = await r.json();
+                d.innerHTML = `<strong>Auto:</strong> ${res.auto}<br><strong>Besitzer:</strong> ${res.besitzer}<br><small style="color:green;">${res.status}</small>`;
+            } catch (e) { d.innerHTML = "<span style='color:red;'>Backend-Fehler!</span>"; }
         }
         fetchData();
     </script>

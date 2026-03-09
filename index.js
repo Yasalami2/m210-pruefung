@@ -9,7 +9,7 @@ exports.handler = async () => {
         body: JSON.stringify({ 
             auto: "Tesla Model 3", 
             besitzer: "Prüfling Yasalami",
-            status: "Backend erfolgreich verbunden!" 
+            status: "Backend LIVE!" 
         })
     };
 };
