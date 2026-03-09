@@ -2,24 +2,34 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>M210 Prüfung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M210 Prüfung - Terraform Test</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="card">
-        <h1>🚗 Fahrzeug-Status</h1>
-        <div id="data">Warte auf Daten...</div>
+        <h1>🚗 Cloud Daten</h1>
+        <div id="data">Lade Daten vom Backend...</div>
         <button onclick="fetchData()">Aktualisieren</button>
     </div>
+
     <script>
-        const url = "https://cbydgitsycukdj5gc2kciemale0rjrxu.lambda-url.us-east-1.on.aws/";
+        // HIER KOMMT SPÄTER DEINE TERRAFORM LAMBDA URL REIN!
+        const API_URL = "HIER_URL_EINFÜGEN";
+
         async function fetchData() {
-            const d = document.getElementById('data');
+            const display = document.getElementById('data');
             try {
-                const r = await fetch(url);
-                const res = await r.json();
-                d.innerHTML = `<strong>Auto:</strong> ${res.auto}<br><strong>Besitzer:</strong> ${res.besitzer}<br><small style="color:green;">${res.status}</small>`;
-            } catch (e) { d.innerHTML = "<span style='color:red;'>Backend-Fehler!</span>"; }
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                display.innerHTML = `
+                    <strong>Auto:</strong> ${result.auto} <br>
+                    <strong>Besitzer:</strong> ${result.besitzer} <br>
+                    <small style="color:green;">${result.status}</small>
+                `;
+            } catch (error) {
+                display.innerHTML = "<span style='color:red;'>Warte auf echte Lambda URL...</span>";
+            }
         }
         fetchData();
     </script>

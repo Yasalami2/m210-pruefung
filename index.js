@@ -1,4 +1,4 @@
-exports.handler = async () => {
+exports.handler = async (event) => {
     return {
         statusCode: 200,
         headers: {
@@ -9,7 +9,7 @@ exports.handler = async () => {
         body: JSON.stringify({ 
             auto: "Tesla Model 3", 
             besitzer: "Prüfling Yasalami",
-            status: "Backend LIVE!" 
+            status: "Terraform Deployment Erfolgreich!" 
         })
     };
 };
