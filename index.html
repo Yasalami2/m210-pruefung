@@ -1,72 +1,14 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Verwaltung 2026</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<html>
 <body>
-    <div class="container">
-        <header>
-            <h1>🚗 Auto-Manager Pro</h1>
-            <p>M210 Cloud-Projekt</p>
-        </header>
-
-        <main>
-            <section class="form-card">
-                <h2>Neues Auto erfassen</h2>
-                <div class="input-group">
-                    <input type="text" id="kennzeichen" placeholder="Kennzeichen (z.B. BE 12345)">
-                    <input type="text" id="marke" placeholder="Marke (z.B. Tesla)">
-                    <button onclick="saveCar()">Speichern</button>
-                </div>
-            </section>
-
-            <section class="list-card">
-                <h2>Gespeicherte Fahrzeuge</h2>
-                <button class="secondary" onclick="fetchCars()">Liste aktualisieren</button>
-                <div id="statusMessage"></div>
-                <ul id="carList">
-                    </ul>
-            </section>
-        </main>
-    </div>
-
+    <h1>Auto-Prüfung</h1>
+    <button onclick="check()">Backend testen</button>
+    <p id="out"></p>
     <script>
-        // HIER KOMMT DEINE LAMBDA-URL REIN!
-        const API_URL = "DEINE_LAMBDA_URL_VON_AWS";
-
-        async function saveCar() {
-            const kennzeichen = document.getElementById('kennzeichen').value;
-            const marke = document.getElementById('marke').value;
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ Kennzeichen: kennzeichen, Marke: marke })
-                });
-                document.getElementById('statusMessage').innerText = "Erfolgreich gespeichert!";
-                fetchCars();
-            } catch (error) {
-                document.getElementById('statusMessage').innerText = "Fehler beim Speichern.";
-            }
-        }
-
-        async function fetchCars() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                const list = document.getElementById('carList');
-                list.innerHTML = "";
-                data.forEach(car => {
-                    const li = document.createElement('li');
-                    li.textContent = `${car.Kennzeichen}: ${car.Marke}`;
-                    list.appendChild(li);
-                });
-            } catch (error) {
-                document.getElementById('statusMessage').innerText = "Konnte Liste nicht laden.";
-            }
+        async function check() {
+            const res = await fetch("DEINE_URL_HIER");
+            const data = await res.json();
+            document.getElementById("out").innerText = data.message;
         }
     </script>
 </body>

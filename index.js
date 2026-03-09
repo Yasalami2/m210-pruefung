@@ -1,1 +1,1 @@
-exports.handler = async (event) => { return "Hallo von Lambda!"; };
+exports.handler = async () => { return { statusCode: 200, headers: { "Access-Control-Allow-Origin": "*" }, body: JSON.stringify({ message: "Backend ist online!" }) }; };

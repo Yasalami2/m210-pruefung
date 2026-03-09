@@ -1,36 +1,29 @@
-provider "aws" {
-  region = "us-east-1"
-}
+provider "aws" { region = "us-east-1" }
 
-resource "aws_dynamodb_table" "cars_db" {
-  name         = "Auto-Verwaltung-Final"
+resource "aws_dynamodb_table" "db" {
+  name = "AutoDB-Quick"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "Kennzeichen"
-  attribute {
-    name = "Kennzeichen"
-    type = "S"
-  }
+  hash_key = "id"
+  attribute { name = "id", type = "S" }
 }
 
-resource "aws_s3_bucket" "frontend_bucket" {
-  bucket = "auto-verwaltung-frontend-yasalami-final" 
-}
+data "aws_iam_role" "lab" { name = "LabRole" }
 
-resource "aws_s3_bucket_website_configuration" "frontend_config" {
-  bucket = aws_s3_bucket.frontend_bucket.id
-  index_document {
-    suffix = "index.html"
-  }
-}
-
-data "aws_iam_role" "lab_role" {
-  name = "LabRole"
-}
-
-resource "aws_lambda_function" "backend" {
+resource "aws_lambda_function" "api" {
   filename      = "backend_code.zip"
-  function_name = "AutoAPI_Final"
-  role          = data.aws_iam_role.lab_role.arn
+  function_name = "QuickAPI"
+  role          = data.aws_iam_role.lab.arn
   handler       = "index.handler"
   runtime       = "nodejs18.x"
+}
+
+resource "aws_lambda_function_url" "url" {
+  function_name      = aws_lambda_function.api.function_name
+  authorization_type = "NONE"
+  cors { allow_origins = ["*"] }
+}
+
+# DAS ZEIGT DIR DIE URL AN:
+output "api_url" {
+  value = aws_lambda_function_url.url.function_url
 }
