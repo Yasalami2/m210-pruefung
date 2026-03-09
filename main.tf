@@ -3,19 +3,17 @@ provider "aws" {
 }
 
 resource "aws_dynamodb_table" "cars_db" {
-  name         = "Auto-VerwaltungDB"
+  name         = "Auto-Verwaltung-Final"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Kennzeichen"
-
   attribute {
     name = "Kennzeichen"
     type = "S"
   }
 }
 
-# S3 Bucket für das Frontend
 resource "aws_s3_bucket" "frontend_bucket" {
-  bucket = "auto-verwaltung-frontend-yasalami-2026" 
+  bucket = "auto-verwaltung-frontend-yasalami-final" 
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend_config" {
@@ -25,74 +23,14 @@ resource "aws_s3_bucket_website_configuration" "frontend_config" {
   }
 }
 
-# Zugriffsberechtigung für die Website
-resource "aws_s3_bucket_policy" "public_read" {
-  bucket = aws_s3_bucket.frontend_bucket.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.frontend_bucket.arn}/*"
-      }
-    ]
-  })
+data "aws_iam_role" "lab_role" {
+  name = "LabRole"
 }
 
-# IAM Rolle für die Lambda Funktion
-resource "aws_iam_role" "lambda_role" {
-  name = "AutoLambdaRole"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {Service = "lambda.amazonaws.com"}
-    }]
-  })
-}
-
-# IAM Policy ohne Leerzeichen im Namen
-resource "aws_iam_policy" "lambda_db_access" {
-  name = "AutoLambda-DynamoDBAccess"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "dynamodb:PutItem",
-          "dynamodb:GetItem",
-          "dynamodb:Scan"
-        ]
-        Resource = aws_dynamodb_table.cars_db.arn
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "attach_db_to_role" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.lambda_db_access.arn
-}
-
-# Die Lambda Funktion
 resource "aws_lambda_function" "backend" {
   filename      = "backend_code.zip"
-  function_name = "AutoAPI"
-  role          = aws_iam_role.lambda_role.arn
+  function_name = "AutoAPI_Final"
+  role          = data.aws_iam_role.lab_role.arn
   handler       = "index.handler"
   runtime       = "nodejs18.x"
 }
