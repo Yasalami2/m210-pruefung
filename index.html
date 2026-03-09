@@ -1,15 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M210 Prüfung - Fahrzeug Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <h1>Auto-Prüfung</h1>
-    <button onclick="check()">Backend testen</button>
-    <p id="out"></p>
+
+    <div class="card">
+        <h1>🚗 Fahrzeug-Status</h1>
+        
+        <div id="data">
+            Warte auf Daten...
+        </div>
+
+        <button onclick="fetchData()">Aktualisieren</button>
+    </div>
+
     <script>
-        async function check() {
-            const res = await fetch("DEINE_URL_HIER");
-            const data = await res.json();
-            document.getElementById("out").innerText = data.message;
+        // Deine persönliche Lambda-URL
+        const url = "https://qaju6okmpifumdnhu2jfvr6piu0ipiyh.lambda-url.us-east-1.on.aws/";
+
+        async function fetchData() {
+            const display = document.getElementById('data');
+            display.innerText = "Lade...";
+
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                // Anzeige der Daten vom Backend
+                display.innerHTML = `
+                    <strong>Auto:</strong> ${result.auto} <br>
+                    <strong>Besitzer:</strong> ${result.besitzer} <br>
+                    <small style="color: #28a745; display:block; margin-top:10px;">
+                        ${result.status}
+                    </small>
+                `;
+            } catch (error) {
+                display.innerHTML = "<span style='color:red;'>Fehler: Backend nicht erreichbar.</span>";
+                console.error("Fetch-Error:", error);
+            }
         }
+
+        // Seite lädt die Daten sofort beim Öffnen
+        fetchData();
     </script>
+
 </body>
 </html>
