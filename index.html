@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>M210 Cloud Pro</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1f2937; min-width: 350px; }
+        h1 { color: #1f2937; margin-top: 0; }
+        hr { border: 0; height: 1px; background: #e5e7eb; margin: 20px 0; }
+        .output { margin-top: 20px; padding: 15px; border: 2px dashed #f97316; color: #f97316; font-size: 24px; font-weight: bold; border-radius: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>M210 Cloud Pro Skibidi123123</h1>
+        <p>Status: <span style="color: #4ade80;">●</span> Live auf Fargate</p>
+        <hr>
+        <p>Lambda Antwort:</p>
+        <div id="out" class="output">Warte...</div>
+    </div>
+
+    <script>
+        // Deine verifizierte API-URL
+        const apiUrl = "https://buggepc257.execute-api.us-east-1.amazonaws.com/";
+        
+        // Dein aktueller IdToken
+        const jwtToken = "eyJraWQiOiI5XC9PWFBCc05OUDZ6QVY5SitEbjRcL2tTV0pDZFwvMGpaa3ljOGhMb0ZXYWI4PSIsImFsZyI6IlJTMjU2In0.eyJvcmlnaW5fanRpIjoiOTU5ZmRjYTQtZWQ2Ny00ZDllLTkzMDgtODRlYzBiMWUxMGYwIiwic3ViIjoiODQxODc0MzgtYzA5MS03MGU2LTc4MDItYjUzOWY5Y2M5NWIxIiwiYXVkIjoiNWdxYWM0OTVmNW05NDBnZ3A1Z2M2NGc2MmEiLCJldmVudF9pZCI6IjMzZDBmMTlmLTk3ZTAtNDhiZi1iZjhjLTZlYWJlNTZhZjhhYyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNzcyNzg5Njc3LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9DaGhSTXJPSDgiLCJjbGduaXRvOnVzZXJuYW1lIjoiYWRtaW4iLCJleHAiOjE3NzI3OTMyNzcsImlhdCI6MTc3Mjc4OTY3NywianRpIjoiMzk2ZmJjODgtOWI4ZS00ZjUwLThlNzItNjM3YTAyMjlhZjVmIn0.C_s0L7c2-tPTOSh9cBf9EZByZVjDBmDonH06Fy82Y7jq9mbaM0tYNnrHLY_H5j1f8Fk7loiIqhSN3mJGYNbIFWlzZtJQ9-V1OU88I92uiJC-T-3LYithwjC3FfFQ4WAPiGpOQrrDFYSCe0r8WVsFZS36QVoBWBSlfJJWRqwL8DZUhRpUnrYEBcPPFLpXh5Pu06BxU9Oz9e4QmIPaYckThdqlreLlaNWwgEk0pMWclSYDV_Hm2j8Q5a06WH4ZrJXMAoJN7fr1cveGHew37FhX3cujJbPhyDcN5NygqYIs2nTnx5B6YrpIVVU14d2cIJAyZgf-j6dTWkhKlggn8mGoQA";
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                "Authorization": "Bearer " + jwtToken,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Türsteher blockiert! (401/403)");
+            return response.json();
+        })
+        .then(data => { document.getElementById("out").innerText = data; })
+        .catch(error => { 
+            console.error(error);
+            document.getElementById("out").innerText = "Fehler: " + error.message; 
+        });
+    </script>
+</body>
+</html>

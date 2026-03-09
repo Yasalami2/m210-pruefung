@@ -1,0 +1,43 @@
+name: Deploy Auto-Verwaltung
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+          
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform apply (Infrastruktur)
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Deploy Lambda (Backend)
+        run: |
+          cd backend
+          npm ci --omit=dev
+          zip -r function.zip .
+          aws lambda update-function-code \
+            --function-name AutoAPI \
+            --zip-file fileb://function.zip
+
+      - name: Build & Upload Frontend (React)
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+          aws s3 sync build/ s3://auto-verwaltung-frontend-2024-unique-id --delete
