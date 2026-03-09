@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-central-1"
+  region = "us-east-1"
 }
 
 resource "aws_dynamodb_table" "cars_db" {
@@ -15,7 +15,7 @@ resource "aws_dynamodb_table" "cars_db" {
 
 # Bucket-Namen muessen weltweit eindeutig sein
 resource "aws_s3_bucket" "frontend_bucket" {
-  bucket = "auto-verwaltung-frontend-2024-unique-id" 
+  bucket = "auto-verwaltung-frontend-yasalami-2026" 
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend_config" {
@@ -25,7 +25,7 @@ resource "aws_s3_bucket_website_configuration" "frontend_config" {
   }
 }
 
-# Achtung: "Public Read" ist fuer einfache Demos ok
+# Public Read Zugriff fuer die Website
 resource "aws_s3_bucket_policy" "public_read" {
   bucket = aws_s3_bucket.frontend_bucket.id
   policy = jsonencode({
