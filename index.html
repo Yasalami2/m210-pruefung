@@ -2,33 +2,24 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M210 Prüfung</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="card">
         <h1>🚗 Fahrzeug-Status</h1>
-        <div id="data">Lade...</div>
+        <div id="data">Lade Daten...</div>
         <button onclick="fetchData()">Aktualisieren</button>
     </div>
-
     <script>
         const url = "https://cbydgitsycukdj5gc2kciemale0rjrxu.lambda-url.us-east-1.on.aws/";
-
         async function fetchData() {
             const display = document.getElementById('data');
             try {
                 const response = await fetch(url);
                 const result = await response.json();
-                display.innerHTML = `
-                    <strong>Auto:</strong> ${result.auto} <br>
-                    <strong>Besitzer:</strong> ${result.besitzer} <br>
-                    <small style="color:green;">${result.status}</small>
-                `;
-            } catch (error) {
-                display.innerHTML = "<span style='color:red;'>Backend Fehler - CORS prüfen!</span>";
-            }
+                display.innerHTML = `<strong>Auto:</strong> ${result.auto}<br><strong>Besitzer:</strong> ${result.besitzer}<br><small style="color:green;">${result.status}</small>`;
+            } catch (e) { display.innerHTML = "Fehler!"; }
         }
         fetchData();
     </script>
