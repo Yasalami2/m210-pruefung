@@ -13,7 +13,7 @@ resource "aws_dynamodb_table" "cars_db" {
   }
 }
 
-# Bucket-Namen muessen weltweit eindeutig sein
+# S3 Bucket für das Frontend
 resource "aws_s3_bucket" "frontend_bucket" {
   bucket = "auto-verwaltung-frontend-yasalami-2026" 
 }
@@ -25,7 +25,7 @@ resource "aws_s3_bucket_website_configuration" "frontend_config" {
   }
 }
 
-# Public Read Zugriff fuer die Website
+# Zugriffsberechtigung für die Website
 resource "aws_s3_bucket_policy" "public_read" {
   bucket = aws_s3_bucket.frontend_bucket.id
   policy = jsonencode({
@@ -42,6 +42,7 @@ resource "aws_s3_bucket_policy" "public_read" {
   })
 }
 
+# IAM Rolle für die Lambda Funktion
 resource "aws_iam_role" "lambda_role" {
   name = "AutoLambdaRole"
   assume_role_policy = jsonencode({
@@ -54,6 +55,7 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+# IAM Policy ohne Leerzeichen im Namen
 resource "aws_iam_policy" "lambda_db_access" {
   name = "AutoLambda-DynamoDBAccess"
   policy = jsonencode({
@@ -86,6 +88,7 @@ resource "aws_iam_role_policy_attachment" "attach_db_to_role" {
   policy_arn = aws_iam_policy.lambda_db_access.arn
 }
 
+# Die Lambda Funktion
 resource "aws_lambda_function" "backend" {
   filename      = "backend_code.zip"
   function_name = "AutoAPI"
